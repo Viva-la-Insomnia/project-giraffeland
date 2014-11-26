@@ -19,6 +19,10 @@ class CursorSprite(pygame.sprite.Sprite):
 		self.rect.center = self.position
 		
 background = pygame.image.load('graphics/menu_background.png').convert()
+menu_background1 = pygame.image.load('graphics/menu_background1.png').convert()
+menu_background2 = pygame.image.load('graphics/menu_background2.png').convert()
+menu_background3 = pygame.image.load('graphics/menu_background3.png').convert()
+
 screen.blit(background, (0,0))
 recta = screen.get_rect()
 cursor = CursorSprite('graphics/cursor.png', recta.center)
@@ -26,16 +30,65 @@ cursor_group = pygame.sprite.RenderPlain(cursor) #Sprites are always managed in 
 game_start = 0
 pygame.mouse.set_visible(0)
 
+MENU1_BOX1 = Rect(196, 444, 553, 60)
+MENU1_BOX2 = Rect(196, 564, 553, 60)
+MENU1_BOX3 = Rect(196, 621, 553, 60)
+
+menuMode = 0
+
 while 1: #Menu loop
 	clock.tick(DEFAULT_FPS)
-	#USER INPUT
-	for event in pygame.event.get() :
-		if event.type == pygame.KEYDOWN :
-			if event.key == pygame.K_ESCAPE : sys.exit(0)
-		elif event.type == pygame.MOUSEMOTION :
-			cursor.position = event.pos
-	# RENDERING
-	screen.blit(background, (0,0))
+
+	if menuMode == 0 :
+		#USER INPUT
+		for event in pygame.event.get() :
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE : sys.exit(0)
+			elif event.type == pygame.MOUSEMOTION :
+				cursor.position = event.pos
+			elif event.type == pygame.MOUSEBUTTONDOWN :
+				if MENU1_BOX1.collidepoint(event.pos) == True : menuMode = 1
+				elif MENU1_BOX2.collidepoint(event.pos) == True : menuMode = 2
+				elif MENU1_BOX3.collidepoint(event.pos) == True : menuMode = 3
+		# RENDERING
+		screen.blit(background, (0,0))
+
+	elif menuMode == 1 :
+		#USER INPUT
+		for event in pygame.event.get() :
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE : sys.exit(0)
+			elif event.type == pygame.MOUSEMOTION :
+				cursor.position = event.pos
+			elif event.type == pygame.MOUSEBUTTONDOWN :
+				pass
+		# RENDERING
+		screen.blit(menu_background1, (0,0))
+	
+	elif menuMode == 2 :
+		#USER INPUT
+		for event in pygame.event.get() :
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE : sys.exit(0)
+			elif event.type == pygame.MOUSEMOTION :
+				cursor.position = event.pos
+			elif event.type == pygame.MOUSEBUTTONDOWN :
+				pass
+		# RENDERING
+		screen.blit(menu_background2, (0,0))
+	
+	elif menuMode == 3 :
+		#USER INPUT
+		for event in pygame.event.get() :
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE : sys.exit(0)
+			elif event.type == pygame.MOUSEMOTION :
+				cursor.position = event.pos
+			elif event.type == pygame.MOUSEBUTTONDOWN :
+				passs
+		# RENDERING
+		screen.blit(menu_background3, (0,0))
+
 	cursor_group.update()
 	cursor_group.draw(screen)
 	pygame.display.flip()
@@ -79,5 +132,5 @@ class PlayerSprite(pygame.sprite.Sprite):
 GRAVITYCONSTANT = 10;
 #MAIN GAME LOOP
 while 1:
-	deltaT = clock.tick(HIGH_FPS) # Returns time(milliseconds) passed after previous call of tick()
+	deltaT = clock.tick(DEFAULT_FPS) # Returns time(milliseconds) passed after previous call of tick()
 	pass
