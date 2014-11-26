@@ -30,9 +30,16 @@ cursor_group = pygame.sprite.RenderPlain(cursor) #Sprites are always managed in 
 game_start = 0
 pygame.mouse.set_visible(0)
 
-MENU1_BOX1 = Rect(196, 444, 553, 60)
-MENU1_BOX2 = Rect(196, 564, 553, 60)
-MENU1_BOX3 = Rect(196, 621, 553, 60)
+MENU0_BOX1 = Rect(196, 444, 553, 60)
+MENU0_BOX2 = Rect(196, 564, 553, 60)
+MENU0_BOX3 = Rect(196, 621, 553, 60)
+
+MENU1_BOX1 = Rect(382, 462, 274, 60)
+MENU1_BOX2 = Rect(472, 219, 158, 63)
+
+MENU2_BOX1 = Rect(382, 462, 274, 60)
+
+MENU3_BOX1 = Rect(382, 462, 274, 60)
 
 menuMode = 0
 
@@ -47,9 +54,9 @@ while 1: #Menu loop
 			elif event.type == pygame.MOUSEMOTION :
 				cursor.position = event.pos
 			elif event.type == pygame.MOUSEBUTTONDOWN :
-				if MENU1_BOX1.collidepoint(event.pos) == True : menuMode = 1
-				elif MENU1_BOX2.collidepoint(event.pos) == True : menuMode = 2
-				elif MENU1_BOX3.collidepoint(event.pos) == True : menuMode = 3
+				if MENU0_BOX1.collidepoint(event.pos) == True : menuMode = 1
+				elif MENU0_BOX2.collidepoint(event.pos) == True : menuMode = 2
+				elif MENU0_BOX3.collidepoint(event.pos) == True : menuMode = 3
 		# RENDERING
 		screen.blit(background, (0,0))
 
@@ -61,7 +68,8 @@ while 1: #Menu loop
 			elif event.type == pygame.MOUSEMOTION :
 				cursor.position = event.pos
 			elif event.type == pygame.MOUSEBUTTONDOWN :
-				pass
+				if MENU1_BOX1.collidepoint(event.pos) == True : menuMode = 0
+				elif MENU1_BOX2.collidepoint(event.pos) == True : game_start = 1
 		# RENDERING
 		screen.blit(menu_background1, (0,0))
 	
@@ -73,7 +81,7 @@ while 1: #Menu loop
 			elif event.type == pygame.MOUSEMOTION :
 				cursor.position = event.pos
 			elif event.type == pygame.MOUSEBUTTONDOWN :
-				pass
+				if MENU2_BOX1.collidepoint(event.pos) == True : menuMode = 0
 		# RENDERING
 		screen.blit(menu_background2, (0,0))
 	
@@ -85,7 +93,7 @@ while 1: #Menu loop
 			elif event.type == pygame.MOUSEMOTION :
 				cursor.position = event.pos
 			elif event.type == pygame.MOUSEBUTTONDOWN :
-				passs
+				if MENU3_BOX1.collidepoint(event.pos) == True : menuMode = 0
 		# RENDERING
 		screen.blit(menu_background3, (0,0))
 
@@ -133,4 +141,6 @@ GRAVITYCONSTANT = 10;
 #MAIN GAME LOOP
 while 1:
 	deltaT = clock.tick(DEFAULT_FPS) # Returns time(milliseconds) passed after previous call of tick()
-	pass
+	for event in pygame.event.get() :
+			if event.type == pygame.KEYDOWN :
+				if event.key == pygame.K_ESCAPE : sys.exit(0)
