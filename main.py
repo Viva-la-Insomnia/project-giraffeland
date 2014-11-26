@@ -138,9 +138,43 @@ class PlayerSprite(pygame.sprite.Sprite):
 
 #CONSTANTS
 GRAVITYCONSTANT = 10;
+
+#GAME STARTUP
+pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black
+pygame.display.flip()
+
 #MAIN GAME LOOP
 while 1:
 	deltaT = clock.tick(DEFAULT_FPS) # Returns time(milliseconds) passed after previous call of tick()
+	#USER INPUT
 	for event in pygame.event.get() :
 			if event.type == pygame.KEYDOWN :
-				if event.key == pygame.K_ESCAPE : sys.exit(0)
+				if event.key == pygame.K_ESCAPE :
+					#LOAD INGAME MENU TEXTURES
+					ingame_menu_background = pygame.image.load('graphics/ingame_menu_background.png').convert()
+					INGAME_MENU0_BOX1 = Rect(174, 320, 355, 86)
+					INGAME_MENU0_BOX2 = Rect(174, 429, 355, 86)
+					INGAME_MENU0_BOX3 = Rect(174, 534, 355, 86)
+					INGAME_MENU0_BOX4 = Rect(174, 630, 355, 86)
+					ingame_menu_exit = 0
+					while ingame_menu_exit == 0 : #Ingame Menu
+						deltaT = clock.tick(DEFAULT_FPS)
+						#USER INPUT
+						for event in pygame.event.get() :
+							if event.type == pygame.KEYDOWN :
+								if event.key == pygame.K_ESCAPE : ingame_menu_exit = 1
+							elif event.type == pygame.MOUSEMOTION :
+								cursor.position = event.pos
+							elif event.type == pygame.MOUSEBUTTONDOWN :
+								if INGAME_MENU0_BOX1.collidepoint(event.pos) == True : pass
+								elif INGAME_MENU0_BOX2.collidepoint(event.pos) == True : pass
+								elif INGAME_MENU0_BOX3.collidepoint(event.pos) == True : ingame_menu_exit = 1
+								elif INGAME_MENU0_BOX4.collidepoint(event.pos) == True : sys.exit(0)
+						#RENDERING
+						screen.blit(ingame_menu_background, (0,0))
+						cursor_group.update()
+						cursor_group.draw(screen)
+						pygame.display.flip()
+	pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black
+	pygame.display.flip()
+
