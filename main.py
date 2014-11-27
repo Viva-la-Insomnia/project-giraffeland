@@ -8,6 +8,19 @@ clock = pygame.time.Clock()
 #GLOBAL CONSTANTS
 DEFAULT_FPS = 40 #Reasonable estimate for final performance. We don't really need more than 45
 
+#INTRO		
+intro_logo = pygame.image.load('graphics/intro_logo.png').convert()
+intro_background = pygame.image.load('graphics/intro_background.png').convert()
+
+for i in range(128) : #LOGO FADEIN
+	clock.tick(32)
+	screen.blit(intro_background, (0,0))
+	intro_logo.set_alpha(2*i)
+	screen.blit(intro_logo, (200, 200))
+	pygame.display.flip()
+for i in range(128) : #PAUSE
+	clock.tick(32)
+
 #STARTUP AND MENU
 class CursorSprite(pygame.sprite.Sprite):
 	def __init__(self, image, position):
@@ -17,7 +30,7 @@ class CursorSprite(pygame.sprite.Sprite):
 		self.position = position
 	def update(self):
 		self.rect.center = self.position
-		
+
 background = pygame.image.load('graphics/menu_background.png').convert()
 menu_background1 = pygame.image.load('graphics/menu_background1.png').convert()
 menu_background2 = pygame.image.load('graphics/menu_background2.png').convert()
@@ -175,6 +188,6 @@ while 1:
 						cursor_group.update()
 						cursor_group.draw(screen)
 						pygame.display.flip()
-	pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black
+	pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black - Placeholder
 	pygame.display.flip()
 
