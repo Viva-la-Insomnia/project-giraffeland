@@ -1,0 +1,8 @@
+732  Game initialised
+6701 Intro finished
+6803 Menu textures loaded
+6805 Menu started
+6813 Player model initialised
+6813 Ending game startup
+92774 Opening ingame menu
+94713 Quitting the game
