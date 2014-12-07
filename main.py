@@ -1,5 +1,5 @@
 #INITIALIZATION
-import pygame, math, sys
+import pygame, math, sys, random
 from pygame.locals import *
 pygame.init()
 
@@ -162,6 +162,66 @@ while 1: #Menu loop
 	if game_start == 1: break
 
 #CLASSES, METHODS, STUFF
+def collideEntityRect(entity, recta) :
+	if recta.colliderect(entity.rect) == True : 
+		if recta.collidepoint(entity.rect.midbottom) == True :
+			entity.collidesBottom = True
+			return True
+		elif recta.collidepoint(entity.rect.midleft) == True :
+			entity.collidesRight = True
+			return True
+		elif recta.collidepoint(entity.rect.midtop) == True :
+			entity.collidesTop = True
+			return True
+		elif recta.collidepoint(entity.rect.midright) == True :
+			entity.collidesLeft = True
+			return True
+		elif recta.collidepoint(entity.rect.bottomright) == True :
+			x1,y1 = entity.rect.bottomright
+			if x1 > recta.topleft[0] == True :
+				entity.collidesBottom = True
+				return True
+			elif y1 > recta.topleft[1] == True :
+				entity.collidesRight = True
+				return True
+		elif recta.collidepoint(entity.rect.bottomleft) == True :
+			x1,y1 = entity.rect.bottomleft
+			if x1 < recta.topright[0] == True :
+				entity.collidesBottom = True
+				return True
+			elif y1 > recta.topright[1] == True :
+				entity.collidesLeft = True
+				return True
+		elif recta.collidepoint(entity.rect.topleft) == True :
+			x1,y1 = entity.rect.topleft
+			if x1 < recta.bottomright[0] == True :
+				entity.collidesTop = True
+				return True
+			elif y1 < recta.bottomright[1] == True :
+				entity.collidesLeft = True
+				return True
+		elif recta.collidepoint(entity.rect.topright) == True :
+			x1,y1 = entity.rect.topright
+			if x1 > recta.bottomleft[0] == True :
+				entity.collidesTop = True
+				return True
+			elif y1 < recta.bottomleft[1] == True :
+				entity.collidesRight = True
+				return True
+		else : return False
+
+#LEVELGEN
+def levelGen() :
+	levelGene = False
+	while levelGene == False : 
+		for i in range(RectNum) :
+			RectDemo[i] = Rect(random.randrange(10, 1000), random.randrange(100, 700), random.randrange(50, 400), random.randrange(50, 100))
+		levelGene = True
+		for i in range(RectNum) :
+			for j in range(RectNum) :
+				if (RectDemo[i] != RectDemo[j]) & (RectDemo[i].colliderect(RectDemo[j]) == True) : levelGene = False
+				elif collideEntityRect(player, RectDemo[i]) == True : levelGene = False
+
 class PlayerSprite(pygame.sprite.Sprite):
 
 	def __init__(self, position):
@@ -290,7 +350,6 @@ GRAVITY_CONSTANT = 0.05;
 
 #GAME STARTUP
 pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black
-RectDemo = Rect(400,300, 300, 100)
 pygame.display.flip()
 gamePointer = CursorSprite('graphics/gamePointer.png', (512, 320))
 pointer_group = pygame.sprite.RenderPlain(gamePointer)
@@ -299,54 +358,30 @@ player_group = pygame.sprite.RenderPlain(player)
 pygame.event.clear() #Clears the event list so that user actions during the loading are not processed later
 log('Ending game startup')
 
+RectNum = random.randrange(1, 10)
+RectDemo = [Rect(400, 300, 300, 100)] * RectNum
+levelGen()
+
+
+
 #MAIN GAME LOOP
 while 1:
 	deltaT = clock.tick(DEFAULT_FPS) # Returns time(milliseconds) passed after previous call of tick()
 	#DEMO RECT COLLISIONS
-	if RectDemo.colliderect(player.rect) == True : 
-		if RectDemo.collidepoint(player.rect.midbottom) == True :
-			player.collidesBottom = True
-		elif RectDemo.collidepoint(player.rect.midleft) == True :
-			player.collidesRight = True
-		elif RectDemo.collidepoint(player.rect.midtop) == True :
-			player.collidesTop = True
-		elif RectDemo.collidepoint(player.rect.midright) == True :
-			player.collidesLeft = True
-		elif RectDemo.collidepoint(player.rect.bottomright) == True :
-			x1,y1 = player.rect.bottomright
-			if x1 > RectDemo.topleft[0] == True :
-				player.collidesBottom = True
-			elif y1 > RectDemo.topleft[1] == True :
-				player.collidesRight = True
-		elif RectDemo.collidepoint(player.rect.bottomleft) == True :
-			x1,y1 = player.rect.bottomleft
-			if x1 < RectDemo.topright[0] == True :
-				player.collidesBottom = True
-			elif y1 > RectDemo.topright[1] == True :
-				player.collidesLeft = True
-		elif RectDemo.collidepoint(player.rect.topleft) == True :
-			x1,y1 = player.rect.topleft
-			if x1 < RectDemo.bottomright[0] == True :
-				player.collidesTop = True
-			elif y1 < RectDemo.bottomright[1] == True :
-				player.collidesLeft = True
-		elif RectDemo.collidepoint(player.rect.topright) == True :
-			x1,y1 = player.rect.topright
-			if x1 > RectDemo.bottomleft[0] == True :
-				player.collidesTop = True
-			elif y1 < RectDemo.bottomleft[1] == True :
-				player.collidesRight = True
-	else :
+	colliding = 0
+	for i in range(RectNum):
+		if collideEntityRect(player, RectDemo[i]) == True : colliding = 1
+	if colliding != 1 :
 		player.collidesBottom = False
 		player.collidesTop = False
 		player.collidesRight = False
 		player.collidesLeft = False
 
 	#DEMO MOVEMENT LIMITS
-	if player.positionY > 650 :	player.collidesBottom = True
-	elif player.positionY < 100 : player.collidesTop = True
+	if player.positionY > 700 :	player.collidesBottom = True
+	elif player.positionY < 60 : player.collidesTop = True
 	if player.positionX > 1000 : player.collidesRight = True
-	elif player.positionX < 100 : player.collidesLeft = True
+	elif player.positionX < 50 : player.collidesLeft = True
 	#USER INPUT
 	for event in pygame.event.get() :
 		if event.type == pygame.KEYDOWN :
@@ -382,7 +417,11 @@ while 1:
 			elif event.key == pygame.K_DOWN : player.movingDown = True
 			elif event.key == pygame.K_LEFT : player.movingLeft = True
 			elif event.key == pygame.K_RIGHT : player.movingRight = True
-		
+			elif event.key == pygame.K_g : 
+				RectNum = random.randrange(2, 10)
+				RectDemo = [Rect(400, 300, 300, 100)] * RectNum
+				levelGen()
+
 		elif event.type == pygame.KEYUP :
 			if event.key == pygame.K_UP : 
 				player.movingUp = False
@@ -403,7 +442,8 @@ while 1:
 	player_group.update()
 	#RENDERING
 	pygame.draw.rect(screen, (0,0,0), (0,0, 2000, 1800), 0) #Fill screen with black - Placeholder
-	pygame.draw.rect(screen, (255,255,255), RectDemo, 0) #Draw the rectangle
+	for i in range(RectNum) :
+		pygame.draw.rect(screen, (255,255,255), RectDemo[i], 0) #Draw the rectangle
 	pointer_group.draw(screen)
 	player_group.draw(screen)
 	pygame.display.flip()
